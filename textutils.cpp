@@ -23,7 +23,7 @@ inline vector<string> split(const string &s, const char delim) {
     return elems;
 }
 
-inline string get_contained(string& str, const char start, const char end) {
+inline string get_contained(const string& str, const char start, const char end) {
     size_t first = str.find_first_of(start);
     size_t last = str.find_last_of(end);
 

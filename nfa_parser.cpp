@@ -39,35 +39,87 @@ string get_item(const map<string, string>& m, const string& key) {
         throw error_message;
 }
 
-vector<string> nfa_parser::get_set_items(const string& key) {
+set<string> nfa_parser::get_set_items(const string& key) {
     vector<string> items = split(get_item(symbolmap, key), ',');
+
+    set<string> item_set(items.begin(), items.end());
     symbolmap.erase(key);
 
-    return items;
+    return item_set;
 }
 
-void print_vector(vector<string> v) {
-    for (int i = 0; i < v.size(); ++i) {
-        cout << v[i] << endl;
+template <typename T>
+void print(T container) {
+    typename T::const_iterator pos;
+
+    for (pos=container.begin(); pos!=container.end(); ++pos) {
+        cout << *pos << ' ';
+    }
+    cout << endl;
+}
+
+void verify_states(set<string> states, set<string> initial, set<string> final) {
+    string error_message = "NFA Parse Error : ";
+
+    if(initial.size() != 1)
+        throw error_message + "There should be one and only one initial state!";
+
+    if(final.size() < 1 || final.size() > states.size() )
+        throw error_message + "Final states should be between 1 and total number of states!";
+
+    // Verify if all the states in initial and final belong to state vector
+
+    if (!states.count(*initial.begin()))
+        throw error_message + "Initial state '" + *initial.begin() + "' does not belong to Q!";
+
+    set<string>::const_iterator it;
+    for (it = final.begin(); it != final.end(); ++it) {
+        if(!states.count(*it))
+            throw error_message + "Final state '" + *it + "' does not belong to Q!";
     }
 }
 
 void nfa_parser::create_nfa() {
+    string error_message = "NFA Parse Error : ";
 
-    vector<string> states = get_set_items("Q");
-    vector<string> language = get_set_items("E");
-    vector<string> initial = get_set_items("Q0");
-    vector<string> final = get_set_items("F");
+    set<string> states = get_set_items("Q");
+    set<string> language = get_set_items("E");
+    set<string> initial = get_set_items("Q0");
+    set<string> final = get_set_items("F");
 
-    print_vector(states);
-    print_vector(language);
-    print_vector(initial);
-    print_vector(final);
+    verify_states(states, initial, final);
 
-    map<string, string>::const_iterator iter = symbolmap.begin();
-    for (; iter!=symbolmap.end(); ++iter) {
-        cout << "'"<<iter->first << "' " << iter->second << endl;
+    // Verifying Language
+    if(language.count("e"))
+        throw error_message + "Language alphabet 'e' clashes with keyword for epsilon!";
+
+    set<string>::const_iterator i, j;
+
+    language.insert("e"); // Add epsilon move in alphabet
+    for (i = states.begin(); i != states.end(); ++i) {
+        for (j = language.begin(); j != language.end(); ++j) {
+            cout << *i << "," << *j << " -> ";
+            try {
+                print(get_set_items("T(" + *i + "," + *j + ")"));
+            } catch (const string& message) {
+                cout << "Transition Error : Required Transition for state '"
+                << *i << "' on alphabet '" << *j << "' not defined!" << endl;
+                throw;
+            }
+        }
     }
+    language.erase("e"); // Remove epsilon move from alphabet
+
+    if(symbolmap.size()>0) {
+        cout << "Input File contains the  following undefined transitions :" << endl;
+        map<string, string>::const_iterator iter;
+        for (iter = symbolmap.begin(); iter!=symbolmap.end(); ++iter) {
+            cout << iter->first << " -> " << iter->second << endl;
+        }
+
+        throw error_message + "Undefined transitions!";
+    }
+
 }
 
 void nfa_parser::test() {

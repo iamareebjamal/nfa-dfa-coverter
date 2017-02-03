@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ public:
 
     nfa_parser(const string& filename);
     void create_nfa();
-    vector<string> get_set_items(const string& key);
+    set<string> get_set_items(const string& key);
 
     static void test();
 
