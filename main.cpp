@@ -1,8 +1,9 @@
 #include <iostream>
+#include "nfa_parser.h"
 
 using namespace std;
 
 int main() {
-    cout << "Hello, World!" << endl;
+    nfa_parser::test();
     return 0;
 }
