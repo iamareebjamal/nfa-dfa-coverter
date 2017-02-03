@@ -3,7 +3,6 @@
 
 #include <sstream>
 #include <vector>
-#include <iostream>
 
 using namespace std;
 
@@ -18,7 +17,7 @@ void split(const string &s, const char delim, T result) {
 }
 
 
-inline vector<string> str_split(const string &s, const char delim) {
+inline vector<string> split(const string &s, const char delim) {
     vector<string> elems;
     split(s, delim, back_inserter(elems));
     return elems;

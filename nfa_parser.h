@@ -9,10 +9,11 @@ using namespace std;
 
 class nfa_parser {
 public:
-    vector<string> lines;
-    map<string, string> linemap;
+    map<string, string> symbolmap;
 
     nfa_parser(const string& filename);
+    void create_nfa();
+    vector<string> get_set_items(const string& key);
 
     static void test();
 
