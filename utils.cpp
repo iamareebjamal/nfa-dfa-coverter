@@ -70,7 +70,7 @@ inline const string to_string(T container, char delim) {
     if(length > 1)
         out.erase(out.begin() + length - 1);
 
-    if(delim != ' ')
+    if(length > 1 && delim != ' ')
         out.erase(out.begin() + length - 2);
 
     return out;
