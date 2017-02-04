@@ -184,21 +184,21 @@ const string get_transition_string(const map< pair<string, string>, set<string> 
     map< pair<string, string>, set<string> >::const_iterator it;
 
     for(it = m.begin(); it != m.end(); ++it) {
-        output += "(" + it->first.first + ", " + it->first.second + ") -> { " + to_string(it->second) + " }\n";
+        output += "(" + it->first.first + ", " + it->first.second + ") -> { " + to_string(it->second, ',') + " }\n";
     }
 
     return output;
 }
 
 string nfa::tostring() {
-    return "Alphabet:\n" +
-            to_string(alphabet) +
-            "\nStates:\n" +
-            to_string(states) +
+    return "Alphabet:\n"
+            "{ " + to_string(alphabet, ',') + " }"
+            "\nStates:\n"
+            "{ " + to_string(states, ',') + " }"
             "\nInitial State : \n" +
             initial +
-            "\nFinal States:\n" +
-            to_string(final) +
+            "\nFinal States:\n"
+            "{ " + to_string(final, ',') + " }"
             "\nTransitions:\n" +
             get_transition_string(transitions);
 }
