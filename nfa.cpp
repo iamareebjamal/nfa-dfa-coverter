@@ -127,10 +127,10 @@ void nfa::to_dfa() {
 
         if(!contains(dfa_states, current)) {
 
-            cout << "for : { " << to_string(current) << " }" << endl;
+            cout << "for : { " << to_string(current, ',') << " }" << endl;
             for (it = alphabet.begin(); it != alphabet.end(); ++it) {
                 set<string> epsilon_state = get_epsilon_closure(get_states(current, *it));
-                cout << *it << " : { " << to_string(epsilon_state) << " }" << endl;
+                cout << *it << " : { " << to_string(epsilon_state, ',') << " }" << endl;
 
                 if (!contains(dfa_states, epsilon_state))
                     remaining.push(epsilon_state);

@@ -56,20 +56,31 @@ inline bool contains(T container, V object){
 }
 
 template <typename T>
-inline const string to_string(T container) {
+inline const string to_string(T container, char delim) {
     typename T::const_iterator pos;
 
     string out;
     for (pos=container.begin(); pos!=container.end(); ++pos) {
-        out += *pos + ' ';
+        out += *pos + delim;
+        if (delim != ' ')
+            out += ' ';
     }
 
     unsigned long length = out.length();
     if(length > 1)
         out.erase(out.begin() + length - 1);
 
+    if(delim != ' ')
+        out.erase(out.begin() + length - 2);
+
     return out;
 }
+
+template <typename T>
+inline const string to_string(T container) {
+    return to_string(container, ' ');
+}
+
 
 
 #endif //TEXT_UTILS_CPP
