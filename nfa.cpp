@@ -1,3 +1,5 @@
+#include <queue>
+#include <iostream>
 #include "nfa.h"
 #include "textutils.cpp"
 
@@ -41,12 +43,61 @@ void nfa::add_transition(const string& current_state, const string& alphabet, co
     transitions[make_pair(current_state, alphabet)] = result;
 }
 
-const set<string> nfa::get_states(string state, string alphabet) {
+const set<string> nfa::get_states(const string& state, const string& alphabet) {
     pair<string, string> key = make_pair(state, alphabet);
     if(!transitions.count(key))
         throw "NFA Error : Invalid Transition!";
 
     return transitions[key];
+}
+
+const set<string> nfa::get_epsilon_closure(const string &state) {
+    set<string> key;
+    key.insert(state);
+
+    if(epsilon_closures.count(key))
+        return epsilon_closures[key];
+
+    set<string> epsilon_states;
+
+    queue<string> remaining;
+    remaining.push(state);
+
+    while (!remaining.empty()) {
+        string current = remaining.front();
+
+        epsilon_states.insert(current);
+
+        set<string> epsilon_moves = get_states(current, "e");
+        set<string>::const_iterator it;
+        for(it = epsilon_moves.begin(); it != epsilon_moves.end(); ++it) {
+            if(!epsilon_states.count(*it))
+                remaining.push(*it);
+        }
+
+        remaining.pop();
+    }
+
+    epsilon_closures[key] = epsilon_states;
+
+    return epsilon_states;
+}
+
+const set<string> nfa::get_epsilon_closure(const set<string> &states) {
+    if (epsilon_closures.count(states))
+        return epsilon_closures[states];
+
+    set<string> epsilon_states;
+
+    set<string>::const_iterator it;
+    for(it = states.begin(); it != states.end(); ++it) {
+        set<string> current_states = get_epsilon_closure(*it);
+        epsilon_states.insert(current_states.begin(), current_states.end());
+    }
+
+    epsilon_closures[states] = epsilon_states;
+
+    return epsilon_states;
 }
 
 const string get_transition_string(const map< pair<string, string>, set<string> > m) {
