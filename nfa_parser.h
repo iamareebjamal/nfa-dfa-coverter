@@ -17,6 +17,7 @@ private:
 public:
     nfa_parser(const string& filename);
     nfa create_nfa();
+
 };
 
 
