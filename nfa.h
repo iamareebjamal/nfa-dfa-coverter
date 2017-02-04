@@ -14,6 +14,7 @@ private:
 
     map< pair<string, string>, set<string> > transitions;
     map< set<string>, set<string> > epsilon_closures;
+
 public:
     void set_states(const set<string>& states, const set<string>& initial, const set<string>& final);
     void set_alphabet(const set<string>& alphabet);
