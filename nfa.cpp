@@ -158,7 +158,7 @@ void nfa::to_dfa() {
             set<string> epsilon_state = get_epsilon_closure(get_states(current, *it));
             cout << "    " << *it << " -> { " << to_string(epsilon_state, ',') << " }" << endl;
 
-            if (!contains(dfa_states, epsilon_state))
+            if (!contains(dfa_states, epsilon_state) && !epsilon_state.empty())
                 remaining.push(epsilon_state);
         }
 
@@ -166,7 +166,10 @@ void nfa::to_dfa() {
         cout << endl;
     }
 
-    cout << "\nFinal States : " << endl;
+    cout << "\nInitial State : " << endl;
+    cout << "{ " << to_string(dfa_states[0], ',') << " }" << endl;
+
+    cout << "Final States : " << endl;
     for (int i = 0; i < dfa_states.size(); ++i) {
         set<string> current = dfa_states[i];
 
