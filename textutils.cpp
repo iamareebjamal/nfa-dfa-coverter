@@ -49,5 +49,18 @@ inline string strip(string& str) {
     return strip(str, ' ');
 }
 
+template <typename T>
+inline const string to_string(T container) {
+    typename T::const_iterator pos;
+
+    string out;
+    for (pos=container.begin(); pos!=container.end(); ++pos) {
+        out += *pos + ' ';
+    }
+    out += '\n';
+
+    return out;
+}
+
 
 #endif //TEXT_UTILS_CPP

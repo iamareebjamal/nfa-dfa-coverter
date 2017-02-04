@@ -5,19 +5,18 @@
 #include <vector>
 #include <map>
 #include <set>
+#include "nfa.h"
 
 using namespace std;
 
 class nfa_parser {
-public:
+private:
     map<string, string> symbolmap;
-
-    nfa_parser(const string& filename);
-    void create_nfa();
     set<string> get_set_items(const string& key);
 
-    static void test();
-
+public:
+    nfa_parser(const string& filename);
+    nfa create_nfa();
 };
 
 
