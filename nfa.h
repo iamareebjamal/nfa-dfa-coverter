@@ -20,8 +20,11 @@ public:
 
     void add_transition(const string& current_state, const string& alphabet, const set<string>& result);
     const set<string> get_states(const string& state, const string& alphabet);
+    const set<string> get_states(const set<string>& states, const string& alphabet);
     const set<string> get_epsilon_closure(const string& state);
     const set<string> get_epsilon_closure(const set<string>& states);
+
+    void to_dfa();
 
     const string tostring();
 };

@@ -57,7 +57,10 @@ inline const string to_string(T container) {
     for (pos=container.begin(); pos!=container.end(); ++pos) {
         out += *pos + ' ';
     }
-    out += '\n';
+
+    unsigned long length = out.length();
+    if(length > 1)
+        out.erase(out.begin() + length - 1);
 
     return out;
 }

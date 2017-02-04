@@ -1,5 +1,6 @@
 #include <queue>
 #include <iostream>
+#include <algorithm>
 #include "nfa.h"
 #include "textutils.cpp"
 
@@ -51,6 +52,18 @@ const set<string> nfa::get_states(const string& state, const string& alphabet) {
     return transitions[key];
 }
 
+const set<string> nfa::get_states(const set<string> &states, const string &alphabet) {
+    set<string> compound_states;
+
+    set<string>::const_iterator it;
+    for(it = states.begin(); it != states.end(); ++it) {
+        set<string> out_state = get_states(*it, alphabet);
+        compound_states.insert(out_state.begin(), out_state.end());
+    }
+
+    return compound_states;
+}
+
 const set<string> nfa::get_epsilon_closure(const string &state) {
     set<string> key;
     key.insert(state);
@@ -100,12 +113,45 @@ const set<string> nfa::get_epsilon_closure(const set<string> &states) {
     return epsilon_states;
 }
 
+void nfa::to_dfa() {
+    set<string> initial = get_epsilon_closure(this->initial);
+
+    queue< set<string> > remaining;
+    remaining.push(initial);
+
+    vector< set<string> > dfa_states;
+
+    set<string>::const_iterator it;
+
+    while(!remaining.empty()) {
+        set<string> current = remaining.front();
+
+        if(find(dfa_states.begin(), dfa_states.end(), current) == dfa_states.end()) {
+
+            cout << "for : { " << to_string(current) << " }" << endl;
+            for (it = alphabet.begin(); it != alphabet.end(); ++it) {
+                set<string> epsilon_state = get_epsilon_closure(get_states(current, *it));
+                cout << *it << " : " << to_string(epsilon_state) << endl;
+
+                if (find(dfa_states.begin(), dfa_states.end(), epsilon_state) == dfa_states.end())
+                    remaining.push(epsilon_state);
+            }
+
+            cout << endl;
+        }
+
+        dfa_states.push_back(current);
+        remaining.pop();
+    }
+
+}
+
 const string get_transition_string(const map< pair<string, string>, set<string> > m) {
     string output;
     map< pair<string, string>, set<string> >::const_iterator it;
 
     for(it = m.begin(); it != m.end(); ++it) {
-        output += it->first.first + "," + it->first.second + " -> " + to_string(it->second);
+        output += "(" + it->first.first + ", " + it->first.second + ") -> { " + to_string(it->second) + " }\n";
     }
 
     return output;
@@ -114,12 +160,12 @@ const string get_transition_string(const map< pair<string, string>, set<string> 
 const string nfa::tostring() {
     return "Alphabet:\n" +
             to_string(alphabet) +
-            "States:\n" +
+            "\nStates:\n" +
             to_string(states) +
-            "Initial State : \n" +
-            initial + "\n" +
-            "Final States:\n" +
+            "\nInitial State : \n" +
+            initial +
+            "\nFinal States:\n" +
             to_string(final) +
-            "Transitions:\n" +
+            "\nTransitions:\n" +
             get_transition_string(transitions);
 }
