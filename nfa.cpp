@@ -1,8 +1,7 @@
 #include <queue>
 #include <iostream>
-#include <algorithm>
 #include "nfa.h"
-#include "textutils.cpp"
+#include "utils.cpp"
 
 void verify_states(set<string> states, set<string> initial, set<string> final) {
     string error_message = "NFA Creation Error : ";
@@ -126,14 +125,14 @@ void nfa::to_dfa() {
     while(!remaining.empty()) {
         set<string> current = remaining.front();
 
-        if(find(dfa_states.begin(), dfa_states.end(), current) == dfa_states.end()) {
+        if(!contains(dfa_states, current)) {
 
             cout << "for : { " << to_string(current) << " }" << endl;
             for (it = alphabet.begin(); it != alphabet.end(); ++it) {
                 set<string> epsilon_state = get_epsilon_closure(get_states(current, *it));
-                cout << *it << " : " << to_string(epsilon_state) << endl;
+                cout << *it << " : { " << to_string(epsilon_state) << " }" << endl;
 
-                if (find(dfa_states.begin(), dfa_states.end(), epsilon_state) == dfa_states.end())
+                if (!contains(dfa_states, epsilon_state))
                     remaining.push(epsilon_state);
             }
 

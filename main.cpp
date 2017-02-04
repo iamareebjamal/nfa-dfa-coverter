@@ -1,6 +1,6 @@
 #include <iostream>
 #include "nfa_parser.h"
-#include "textutils.cpp"
+#include "utils.cpp"
 
 using namespace std;
 

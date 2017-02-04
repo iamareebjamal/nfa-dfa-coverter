@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -47,6 +48,11 @@ inline string strip(string& str, const char c) {
 
 inline string strip(string& str) {
     return strip(str, ' ');
+}
+
+template <typename T, typename V>
+inline bool contains(T container, V object){
+    return std::find(container.begin(), container.end(), object) != container.end();
 }
 
 template <typename T>

@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <iostream>
-#include "textutils.cpp"
+#include "utils.cpp"
 
 nfa_parser::nfa_parser(const string& filename) {
     ifstream file(filename.c_str());
