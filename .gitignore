@@ -3,3 +3,7 @@ a.out
 nfa2dfa
 nfa
 .idea/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
