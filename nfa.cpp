@@ -3,9 +3,19 @@
 #include "nfa.h"
 #include "utils.cpp"
 
-void verify_states(set<string> states, set<string> initial, set<string> final) {
-    string error_message = "NFA Creation Error : ";
+string error_message = "NFA Creation Error : ";
 
+void verify_state_set(const set<string>& states, const set<string>& state_set) {
+
+    set<string>::const_iterator it;
+    for (it = state_set.begin(); it != state_set.end(); ++it) {
+        if(!states.count(*it))
+            throw error_message + "State '" + *it + "' does not belong to Q!";
+    }
+}
+
+
+void verify_states(set<string> states, set<string> initial, set<string> final) {
     if(initial.size() != 1)
         throw error_message + "There should be one and only one initial state!";
 
@@ -17,10 +27,11 @@ void verify_states(set<string> states, set<string> initial, set<string> final) {
     if (!states.count(*initial.begin()))
         throw error_message + "Initial state '" + *initial.begin() + "' does not belong to Q!";
 
-    set<string>::const_iterator it;
-    for (it = final.begin(); it != final.end(); ++it) {
-        if(!states.count(*it))
-            throw error_message + "Final state '" + *it + "' does not belong to Q!";
+    try {
+        verify_state_set(states, final);
+    } catch (const string& message) {
+        cout << "Invalid Final State!" << endl;
+        throw;
     }
 }
 
@@ -40,6 +51,7 @@ void nfa::set_alphabet(const set<string> &alphabet) {
 }
 
 void nfa::add_transition(const string& current_state, const string& alphabet, const set<string>& result) {
+    verify_state_set(states, result);
     transitions[make_pair(current_state, alphabet)] = result;
 }
 
