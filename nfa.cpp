@@ -112,7 +112,19 @@ const set<string> nfa::get_epsilon_closure(const set<string> &states) {
     return epsilon_states;
 }
 
+bool nfa::is_final(const set<string> &states) {
+    set<string>::const_iterator it;
+
+    for(it = states.begin(); it != states.end(); ++it) {
+        if(contains(final, *it))
+            return true;
+    }
+
+    return false;
+}
+
 void nfa::to_dfa() {
+    cout << "DFA Conversion : \n" << endl;
     set<string> initial = get_epsilon_closure(this->initial);
 
     queue< set<string> > remaining;
@@ -124,23 +136,30 @@ void nfa::to_dfa() {
 
     while(!remaining.empty()) {
         set<string> current = remaining.front();
+        remaining.pop();
 
-        if(!contains(dfa_states, current)) {
+        if(contains(dfa_states, current))
+            continue;
 
-            cout << "for : { " << to_string(current, ',') << " }" << endl;
-            for (it = alphabet.begin(); it != alphabet.end(); ++it) {
-                set<string> epsilon_state = get_epsilon_closure(get_states(current, *it));
-                cout << *it << " : { " << to_string(epsilon_state, ',') << " }" << endl;
+        cout << "For state : { " << to_string(current, ',') << " }" << endl;
+        for (it = alphabet.begin(); it != alphabet.end(); ++it) {
+            set<string> epsilon_state = get_epsilon_closure(get_states(current, *it));
+            cout << "    " << *it << " -> { " << to_string(epsilon_state, ',') << " }" << endl;
 
-                if (!contains(dfa_states, epsilon_state))
-                    remaining.push(epsilon_state);
-            }
-
-            cout << endl;
+            if (!contains(dfa_states, epsilon_state))
+                remaining.push(epsilon_state);
         }
 
         dfa_states.push_back(current);
-        remaining.pop();
+        cout << endl;
+    }
+
+    cout << "\nFinal States : " << endl;
+    for (int i = 0; i < dfa_states.size(); ++i) {
+        set<string> current = dfa_states[i];
+
+        if(is_final(current))
+            cout << "{ " << to_string(current, ',') << " }" << endl;
     }
 
 }
@@ -156,7 +175,7 @@ const string get_transition_string(const map< pair<string, string>, set<string> 
     return output;
 }
 
-const string nfa::tostring() {
+string nfa::tostring() {
     return "Alphabet:\n" +
             to_string(alphabet) +
             "\nStates:\n" +
