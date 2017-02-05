@@ -37,6 +37,7 @@ int main() {
     create_dfa("nfa1");
     create_dfa("nfa2");
     create_dfa("nfa3");
+    create_dfa("nfa4");
     */
     return 0;
 }
