@@ -226,12 +226,12 @@ const string get_transition_string(const map< pair<string, string>, set<string> 
 string nfa::tostring() {
     return "Alphabet:\n"
             "{ " + to_string(alphabet, ',') + " }"
-            "\nStates:\n"
+            "\n\nStates:\n"
             "{ " + to_string(states, ',') + " }"
-            "\nInitial State : \n" +
+            "\n\nInitial State : \n" +
             initial +
-            "\nFinal States:\n"
+            "\n\nFinal States:\n"
             "{ " + to_string(final, ',') + " }"
-            "\nTransitions:\n" +
+            "\n\nTransitions:\n" +
             get_transition_string(transitions);
 }
