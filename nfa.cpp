@@ -1,5 +1,6 @@
 #include <queue>
 #include <iostream>
+#include <sstream>
 #include "nfa.h"
 #include "utils.cpp"
 
@@ -13,7 +14,6 @@ void verify_state_set(const set<string>& states, const set<string>& state_set) {
             throw error_message + "State '" + *it + "' does not belong to Q!";
     }
 }
-
 
 void verify_states(set<string> states, set<string> initial, set<string> final) {
     if(initial.size() != 1)
@@ -135,7 +135,44 @@ bool nfa::is_final(const set<string> &states) {
     return false;
 }
 
-void nfa::to_dfa() {
+string nfa::format_output(stringstream& iss, vector< set<string> >& dfa_states) {
+    cout << "\nInitial State : " << endl;
+    string initial_state = to_string(dfa_states[0], ',');
+    cout << "{ " << initial_state << " }" << endl;
+
+    iss << (string) "q0 : { " << initial_state << " }" << endl;
+    iss << "F : {";
+
+    cout << "Final States : " << endl;
+    string prefix = "Q : {";
+    const char* delim = " ";
+    for (int i = 0; i < dfa_states.size(); ++i) {
+        set<string> current = dfa_states[i];
+
+        prefix+= " { " + to_string(current, ',') + " },";
+
+        if(is_final(current)) {
+            string final_state = to_string(current, ',');
+            cout << "{ " << final_state << " }" << endl;
+
+            iss << delim << "{ " << final_state << " }";
+            delim = ", ";
+        }
+    }
+    iss << " }" << endl;
+
+    // Add states and languages to output
+    unsigned long index = prefix.length()-1;
+    if(prefix[index] == ',')
+        prefix.erase(prefix.begin() + index);
+    prefix += " }\n";
+    prefix += "E : { " + to_string(alphabet, ',') + " }\n";
+
+    return prefix + "\n" + iss.str();
+}
+
+string nfa::to_dfa() {
+    stringstream iss;
     cout << "DFA Conversion : \n" << endl;
     set<string> initial = get_epsilon_closure(this->initial);
 
@@ -153,10 +190,15 @@ void nfa::to_dfa() {
         if(contains(dfa_states, current))
             continue;
 
-        cout << "For state : { " << to_string(current, ',') << " }" << endl;
+        string current_set = to_string(current, ',');
+        cout << "For state : { " << current_set << " }" << endl;
         for (it = alphabet.begin(); it != alphabet.end(); ++it) {
             set<string> epsilon_state = get_epsilon_closure(get_states(current, *it));
-            cout << "    " << *it << " -> { " << to_string(epsilon_state, ',') << " }" << endl;
+
+            string epsilon_set = to_string(epsilon_state, ',');
+            cout << "    " << *it << " -> { " << epsilon_set << " }" << endl;
+
+            iss << (string) "T({ " << current_set << " }, " << *it << " ) : {" << epsilon_set << " }" << endl;
 
             if (!contains(dfa_states, epsilon_state) && !epsilon_state.empty())
                 remaining.push(epsilon_state);
@@ -164,19 +206,10 @@ void nfa::to_dfa() {
 
         dfa_states.push_back(current);
         cout << endl;
+        iss<<endl;
     }
 
-    cout << "\nInitial State : " << endl;
-    cout << "{ " << to_string(dfa_states[0], ',') << " }" << endl;
-
-    cout << "Final States : " << endl;
-    for (int i = 0; i < dfa_states.size(); ++i) {
-        set<string> current = dfa_states[i];
-
-        if(is_final(current))
-            cout << "{ " << to_string(current, ',') << " }" << endl;
-    }
-
+    return format_output(iss, dfa_states);
 }
 
 const string get_transition_string(const map< pair<string, string>, set<string> > m) {
