@@ -1,0 +1,17 @@
+Q : { { p }, { p, q }, { p, q, r } }
+E : { a, b, c }
+
+T({ p }, a ) : { p }
+T({ p }, b ) : { p, q }
+T({ p }, c ) : { p, q, r }
+
+T({ p, q }, a ) : { p, q }
+T({ p, q }, b ) : { p, q, r }
+T({ p, q }, c ) : { p, q, r }
+
+T({ p, q, r }, a ) : { p, q, r }
+T({ p, q, r }, b ) : { p, q, r }
+T({ p, q, r }, c ) : { p, q, r }
+
+Q0 : { p }
+F : { { p, q, r } }
