@@ -15,7 +15,7 @@ private:
     map< pair<string, string>, set<string> > transitions;
     map< set<string>, set<string> > epsilon_closures;
 
-    string format_output(stringstream& iss, vector< set<string> >& dfa_states);
+    string format_output(ostringstream& oss, vector< set<string> >& dfa_states);
 
 public:
     void set_states(const set<string>& states, const set<string>& initial, const set<string>& final);

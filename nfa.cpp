@@ -135,13 +135,13 @@ bool nfa::is_final(const set<string> &states) {
     return false;
 }
 
-string nfa::format_output(stringstream& iss, vector< set<string> >& dfa_states) {
+string nfa::format_output(ostringstream& oss, vector< set<string> >& dfa_states) {
     cout << "\nInitial State : " << endl;
     string initial_state = to_string(dfa_states[0], ',');
     cout << "{ " << initial_state << " }" << endl;
 
-    iss << (string) "Q0 : { " << initial_state << " }" << endl;
-    iss << "F : {";
+    oss << (string) "Q0 : { " << initial_state << " }" << endl;
+    oss << "F : {";
 
     cout << "Final States : " << endl;
     string prefix = "Q : {";
@@ -155,11 +155,11 @@ string nfa::format_output(stringstream& iss, vector< set<string> >& dfa_states) 
             string final_state = to_string(current, ',');
             cout << "{ " << final_state << " }" << endl;
 
-            iss << delim << "{ " << final_state << " }";
+            oss << delim << "{ " << final_state << " }";
             delim = ", ";
         }
     }
-    iss << " }" << endl;
+    oss << " }" << endl;
 
     // Add states and languages to output
     unsigned long index = prefix.length()-1;
@@ -168,11 +168,11 @@ string nfa::format_output(stringstream& iss, vector< set<string> >& dfa_states) 
     prefix += " }\n";
     prefix += "E : { " + to_string(alphabet, ',') + " }\n";
 
-    return prefix + "\n" + iss.str();
+    return prefix + "\n" + oss.str();
 }
 
 string nfa::to_dfa() {
-    stringstream iss;
+    ostringstream oss;
     cout << "DFA Conversion : \n" << endl;
     set<string> initial = get_epsilon_closure(this->initial);
 
@@ -198,7 +198,7 @@ string nfa::to_dfa() {
             string epsilon_set = to_string(epsilon_state, ',');
             cout << "    " << *it << " -> { " << epsilon_set << " }" << endl;
 
-            iss << (string) "T({ " << current_set << " }, " << *it << " ) : { " << epsilon_set << " }" << endl;
+            oss << (string) "T({ " << current_set << " }, " << *it << " ) : { " << epsilon_set << " }" << endl;
 
             if (!contains(dfa_states, epsilon_state) && !epsilon_state.empty())
                 remaining.push(epsilon_state);
@@ -206,10 +206,10 @@ string nfa::to_dfa() {
 
         dfa_states.push_back(current);
         cout << endl;
-        iss<<endl;
+        oss<<endl;
     }
 
-    return format_output(iss, dfa_states);
+    return format_output(oss, dfa_states);
 }
 
 const string get_transition_string(const map< pair<string, string>, set<string> > m) {
