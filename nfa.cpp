@@ -190,6 +190,11 @@ string nfa::to_dfa() {
         if(contains(dfa_states, current))
             continue;
 
+        dfa_states.push_back(current);
+
+        if(current.empty())
+            continue;
+
         string current_set = to_string(current, ',');
         cout << "For state : { " << current_set << " }" << endl;
         for (it = alphabet.begin(); it != alphabet.end(); ++it) {
@@ -200,13 +205,12 @@ string nfa::to_dfa() {
 
             oss << (string) "T({ " << current_set << " }, " << *it << " ) : { " << epsilon_set << " }" << endl;
 
-            if (!contains(dfa_states, epsilon_state) && !epsilon_state.empty())
+            if (!contains(dfa_states, epsilon_state))
                 remaining.push(epsilon_state);
         }
 
-        dfa_states.push_back(current);
         cout << endl;
-        oss<<endl;
+        oss << endl;
     }
 
     return format_output(oss, dfa_states);
