@@ -216,7 +216,7 @@ string nfa::to_dfa() {
     return format_output(oss, dfa_states);
 }
 
-const string get_transition_string(const map< pair<string, string>, set<string> > m) {
+const string get_transition_string(const map< pair<string, string>, set<string> >& m) {
     string output;
     map< pair<string, string>, set<string> >::const_iterator it;
 
