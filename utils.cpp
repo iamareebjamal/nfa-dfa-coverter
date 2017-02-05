@@ -60,18 +60,14 @@ inline const string to_string(T container, char delim) {
     typename T::const_iterator pos;
 
     string out;
+
+    string sep = "";
+    string sep2; sep2 += delim; sep2 += ' ';
+
     for (pos=container.begin(); pos!=container.end(); ++pos) {
-        out += *pos + delim;
-        if (delim != ' ')
-            out += ' ';
+        out += sep + *pos;
+        sep = sep2;
     }
-
-    unsigned long length = out.length();
-    if(length > 1)
-        out.erase(out.begin() + length - 1);
-
-    if(length > 1 && delim != ' ')
-        out.erase(out.begin() + length - 2);
 
     return out;
 }

@@ -140,7 +140,7 @@ string nfa::format_output(stringstream& iss, vector< set<string> >& dfa_states) 
     string initial_state = to_string(dfa_states[0], ',');
     cout << "{ " << initial_state << " }" << endl;
 
-    iss << (string) "q0 : { " << initial_state << " }" << endl;
+    iss << (string) "Q0 : { " << initial_state << " }" << endl;
     iss << "F : {";
 
     cout << "Final States : " << endl;
@@ -198,7 +198,7 @@ string nfa::to_dfa() {
             string epsilon_set = to_string(epsilon_state, ',');
             cout << "    " << *it << " -> { " << epsilon_set << " }" << endl;
 
-            iss << (string) "T({ " << current_set << " }, " << *it << " ) : {" << epsilon_set << " }" << endl;
+            iss << (string) "T({ " << current_set << " }, " << *it << " ) : { " << epsilon_set << " }" << endl;
 
             if (!contains(dfa_states, epsilon_state) && !epsilon_state.empty())
                 remaining.push(epsilon_state);
