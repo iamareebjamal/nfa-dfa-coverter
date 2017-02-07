@@ -192,9 +192,6 @@ string nfa::to_dfa() {
 
         dfa_states.push_back(current);
 
-        if(current.empty())
-            continue;
-
         string current_set = to_string(current, ',');
         cout << "For state : { " << current_set << " }" << endl;
         for (it = alphabet.begin(); it != alphabet.end(); ++it) {
