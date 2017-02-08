@@ -19,8 +19,12 @@ nfa_parser::nfa_parser(const string& filename) {
         if(splitted.size() != 2)
             throw "Parse Error : A single line must consist one and only one ':' symbol!";
 
+
         string label = strip(splitted[0]);
-        string contained = get_contained(splitted[1], '{', '}');
+        string contained = splitted[1];
+
+        if(label != "Q0") // Initial state is not a set
+            contained = get_contained(contained, '{', '}');
 
         symbolmap[label] = strip(contained);
     }
