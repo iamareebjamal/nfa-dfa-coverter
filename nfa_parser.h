@@ -15,7 +15,7 @@ private:
     set<string> get_set_items(const string& key);
 
 public:
-    nfa_parser(const string& filename);
+    explicit nfa_parser(const string& filename);
     nfa create_nfa();
 
 };

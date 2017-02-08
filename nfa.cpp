@@ -192,9 +192,6 @@ string nfa::to_dfa() {
 
         dfa_states.push_back(current);
 
-        if(current.empty())
-            continue;
-
         string current_set = to_string(current, ',');
         cout << "For state : { " << current_set << " }" << endl;
         for (it = alphabet.begin(); it != alphabet.end(); ++it) {
@@ -216,7 +213,7 @@ string nfa::to_dfa() {
     return format_output(oss, dfa_states);
 }
 
-const string get_transition_string(const map< pair<string, string>, set<string> > m) {
+const string get_transition_string(const map< pair<string, string>, set<string> >& m) {
     string output;
     map< pair<string, string>, set<string> >::const_iterator it;
 
